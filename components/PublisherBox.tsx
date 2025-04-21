@@ -9,6 +9,7 @@ interface MediaFile {
 
 interface PublisherItem {
   name: string;
+  id:string;
   books_count: number;
   media_files: MediaFile[];
 }
@@ -23,11 +24,13 @@ const PublisherBox: React.FC<PublisherBoxProps> = ({ item }) => {
   return (
     <div className="border px-5">
       <div className="w-full flex flex-col items-center justify-center mt-7 max-md:mt-5">
-        <img
+      <Link  href={`/${pathname.includes("publishers/list" )? "publisher" : "creator"}/${item.id}`}>
+      <img
           className="w-[128px] max-md:w-[98px] max-md:h-[98px] border-8 border-light-gray h-[128px] rounded-full"
           src={item.media_files[0]?.main_link || defaultImage}
           alt="پروفایل"
         />
+      </Link>
         <p className="mt-1 text-xl font-light text-charcoal line-clamp-1">
           {item.name}
         </p>
@@ -41,7 +44,7 @@ const PublisherBox: React.FC<PublisherBoxProps> = ({ item }) => {
               </>
             )}
           </p>
-          <Link href={"/"}>مشاهده آثار</Link>
+          <Link href={`/${pathname.includes("publishers/list" )? "publisher" : "creator"}/${item.id}`}>مشاهده آثار</Link>
         </div>
       </div>
     </div>

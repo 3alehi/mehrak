@@ -7,6 +7,7 @@ interface MediaFile {
 
 interface Gallery {
   media_files: MediaFile[];
+  id: string;
 }
 
 interface AllPublisherProps {
@@ -42,13 +43,15 @@ export default function AllPublisher({ data }: AllPublisherProps) {
         </Link>
       </div>
       <div className="flex justify-between  max-md:grid max-md:grid-cols-4">
-        {data.slice(0, 8).map((item: Gallery) => (
-          <img
-            key={item.media_files[0].main_link} // Add a unique key prop
-            className="w-[133px] h-[133px] max-md:w-[86px] max-md:h-[86px]"
-            src={item.media_files[0].main_link}
-            alt="Publisher"
-          />
+        {data.slice(0, 8).map((item: Gallery,index:number) => (
+          <Link key={index} href={`/publisher/${item.id}`}>
+            <img
+              key={item.media_files[0].main_link} // Add a unique key prop
+              className="w-[133px] h-[133px] max-md:w-[86px] max-md:h-[86px]"
+              src={item.media_files[0].main_link}
+              alt="Publisher"
+            />
+          </Link>
         ))}
       </div>
     </div>

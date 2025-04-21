@@ -36,6 +36,7 @@ export default {
 
 			  emeraldGreen: '#67D27E',
 			  CloudGray : "#A3A3A3",
+			  Gray4:"#666666",
 
 
 

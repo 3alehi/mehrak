@@ -57,7 +57,7 @@ console.log(data);
             title={"دسته بندی لوازم التحریر ، خنزل - پنزل و اسباب بازی"}
           />
           <div className="grid grid-cols-3 mt-12 gap-4 border p-2 rounded-2xl overflow-hidden max-md:grid-cols-1">
-            {data.data["collections[2]"].slice(0, 4).map((item: BookItem) => (
+            {data.data["collections[2]"].slice(0, 4).map((item: CollectionData) => (
               <CollectionListBox key={item.id} data={item} />
             ))}
           </div>

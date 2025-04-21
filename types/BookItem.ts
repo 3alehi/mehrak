@@ -1,10 +1,8 @@
-interface BookItem {
-    id: number;
-    title: string;
-    main_price_formatted: string;
-    price_formatted: string;
-    price: number;
-    main_price: number;
-    media_files: { main_link: string }[];
-  }
-  
+export interface BookMediaFile {
+  main_link: string;
+  conversion_links?: {
+    thumbnail_192_192?: string;
+    large_thumbnail_260_260?: string;
+  };
+  collection_name?: string;
+}

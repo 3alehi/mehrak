@@ -133,6 +133,9 @@ export const TotalItemsProvider: React.FC<TotalItemsProviderProps> = ({
   const { data, isLoading, refetch } = useQuery({
     queryKey: ["cart"],
     queryFn: getCart,
+    refetchOnWindowFocus: false,
+    refetchInterval: false,
+    gcTime: 0, // به جای cacheTime
   });
 
   useEffect(()=>{

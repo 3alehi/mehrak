@@ -32,6 +32,9 @@ const Page: React.FC = () => {
   const { data, isLoading, refetch } = useQuery({
     queryKey: ["cart"],
     queryFn: getCart,
+    refetchOnWindowFocus: false,
+    refetchInterval: false,
+    gcTime: 0, // به جای cacheTime
   });
 
   const {
@@ -41,6 +44,10 @@ const Page: React.FC = () => {
   } = useQuery({
     queryKey: ["shipping"],
     queryFn: getShipping,
+    refetchOnWindowFocus: false,
+    refetchInterval: false,
+    gcTime: 0, // به جای cacheTime
+    
   });
 
   useEffect(() => {
@@ -118,7 +125,7 @@ const Page: React.FC = () => {
     );
   }
   return (
-    <div className="w-full flex flex-col items-center justify-center mt-32 max-md:mt-4 pb-8">
+    <div className="w-full flex flex-col items-center justify-center mt-16 max-md:mt-4 pb-8">
       {/* لوگو */}
       <Link href={"/"}>
         <Image
@@ -185,7 +192,7 @@ const Page: React.FC = () => {
             نحوه ارسال
           </p>
           <div className="mt-2 bg-lightBlueGray rounded-2xl border border-[#76D7D7] py-8 px-9 flex flex-col md:flex-row justify-between items-start md:items-center cursor-pointer">
-            <p className="text-customGray text-2xl font-light max-md:text-base max-md:font-medium">
+            <p className="text-customGray text-xl font-light max-md:text-base max-md:font-medium">
               {shipping.data[0].title}
             </p>
             <p className="text-customGray font-light max-md:text-xs">
@@ -274,6 +281,7 @@ const Page: React.FC = () => {
           )}
           {showCreateAddress && (
             <CreateAddress
+            setShowPopup={setShowPopup}
               refectShipping={refetchShipping}
               refetch={refetch}
               setShowCreateAddress={setShowCreateAddress}

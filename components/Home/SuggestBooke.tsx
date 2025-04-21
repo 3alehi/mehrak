@@ -1,10 +1,11 @@
 import Link from "next/link";
 import React from "react";
+
 interface MediaFile {
-  
+  collection_name: string; // اضافه کردن ویژگی collection_name
   conversion_links: {
     large_thumbnail_260_260: string;
-    thumbnail_192_192 : string
+    thumbnail_192_192: string;
   };
 }
 
@@ -13,16 +14,13 @@ interface SuggestBookeProps {
     id: number;
     title: string;
     items: {
-    id: number;
-
+      id: number;
       media_files: MediaFile[];
     }[];
   };
 }
 
 export default function SuggestBooke({ data }: SuggestBookeProps) {
-console.log(data);
-
   return (
     <div className="h-[245px] max-md:hidden bg-lightBlueGray border border-lightGrayBlue rounded-2xl p-6 flex justify-between items-center">
       <div>
@@ -50,20 +48,28 @@ console.log(data);
         </Link>
       </div>
       <div className="grid grid-cols-4 gap-x-4">
-        {data.items.slice(0, 4).map((item, _) => (
-          <Link
-          key={_}
-            href={`/collections/show/${data.id}`}
-            className="  h-[197px]  w-[197px]  object-cover"
-          >
-            <img
+        {data.items.slice(0, 4).map((item, _) => {
+          const frontImage = item.media_files.find(
+            (media) => media.collection_name === "book_front_image"
+          )?.conversion_links.large_thumbnail_260_260;
+
+          return (
+            <Link
               key={_}
-              className=" w-full h-full  object-cover rounded-md  border-2"
-              src={item.media_files[1].conversion_links.large_thumbnail_260_260}
-              alt=""
-            />
-          </Link>
-        ))}
+              href={`/collections/show/${data.id}`}
+              className="h-[197px] w-[197px] object-cover"
+            >
+              {frontImage && (
+                <img
+                  key={_}
+                  className="w-full h-full object-cover rounded-md border-2"
+                  src={frontImage}
+                  alt={`Front Image of ${data.title}`}
+                />
+              )}
+            </Link>
+          );
+        })}
       </div>
     </div>
   );

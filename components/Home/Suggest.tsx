@@ -11,7 +11,7 @@ interface Item {
   id: string;
   media_files: MediaFile[];
   main_price_formatted?: string;
-  price_formatted?:string
+  price_formatted?: string;
 }
 
 interface SuggestProps {
@@ -25,7 +25,6 @@ interface SuggestProps {
 
 export default function Suggest({ data, dark }: SuggestProps) {
   const getImages = () => {
-    // از هر آیتم فقط اولین تصویر thumbnail_192_192 را انتخاب می‌کنیم
     const availableImages = data.items
       .map((item) => {
         const firstImage = item.media_files.find(
@@ -63,7 +62,7 @@ export default function Suggest({ data, dark }: SuggestProps) {
         </p>
       </div>
       <div className="grid grid-cols-[auto_414px] gap-4 max-md:grid-cols-1">
-        <div className="grid grid-cols-4 gap-4 max-md:grid-cols-3">
+        <div className="grid grid-cols-4 gap-4 max-md:gap-2 max-md:grid-cols-3">
           <div className="col-span-2 flex flex-col justify-center max-md:hidden h-full">
             <p
               className={`${
@@ -104,8 +103,7 @@ export default function Suggest({ data, dark }: SuggestProps) {
           </div>
           {images.map((image, index) => {
             const price = data.items[index]?.main_price_formatted;
-            const main_price_formatted =
-              data.items[index]?.price_formatted;
+            const main_price_formatted = data.items[index]?.price_formatted;
             const productId = data.items[index]?.id;
 
             return (
@@ -115,23 +113,38 @@ export default function Suggest({ data, dark }: SuggestProps) {
                     dark
                       ? "border-none"
                       : "border rounded-lg max-md:border-none"
-                  } p-2`}
+                  } p-2 max-md:p-0`}
                 >
                   <img
                     src={image || undefined}
                     alt={`Product ${productId}`}
-                    className="w-full h-full object-cover rounded-lg"
+                    className="w-full h-full  max-md:w-[98px] max-md:h-[98px] object-cover rounded-lg"
                   />
                   <div
                     className={`absolute bottom-2 left-4 text-sm text-left  px-1 rounded-md ${
-                      dark ? "text-white bg-[#202125B2]" : "text-customGray bg-[#e3e3e6b2] "
+                      dark
+                        ? "text-white bg-[#202125B2] bottom-4"
+                        : "text-customGray bg-[#e3e3e6b2] "
                     } font-bold max-md:hidden opacity-0 group-hover:opacity-100 transition-opacity`}
                   >
                     <p className="  line-through text-[10px]"> {price}</p>
-                    <p> {price ? `${main_price_formatted}` : "قیمت موجود نیست"}</p>
+                    <p>
+                      {" "}
+                      {price ? `${main_price_formatted}` : "قیمت موجود نیست"}
+                    </p>
                   </div>
-                  <div className="hidden   max-md:block absolute bottom-2 left-3 line-clamp-1 text-customGray opacity-50 bg-white text-[10px] font-normal p-1 rounded-[4px]">
-                  <p className="  line-through text-[10px]"> {main_price_formatted}</p>
+                  <div
+                    className={`hidden   max-md:block absolute bottom-2 left-3 max-md:bottom-1 max-md:left-1 line-clamp-1 text-customGray opacity-80 text-[10px] font-normal p-1 rounded-[4px] max-md:h-[28px]
+                    ${
+                      dark
+                        ? "text-white bg-[#202125B2] bottom-4"
+                        : "text-customGray bg-[#e3e3e6b2] "
+                    }`}
+                  >
+                    <p className="  line-through text-[8px] text-left ">
+                      {" "}
+                      {main_price_formatted}
+                    </p>
 
                     {price ? `${price}` : "قیمت موجود نیست"}
                   </div>
@@ -178,12 +191,16 @@ export default function Suggest({ data, dark }: SuggestProps) {
           </Link>
           <div
             className={`absolute bottom-2 left-4 text-sm px-1 rounded-md text-left ${
-              dark ? "text-white bg-[#202125B2]" : "text-customGray bg-[#e3e3e6b2] "
+              dark
+                ? "text-white bg-[#202125B2] bottom-4"
+                : "text-customGray bg-[#e3e3e6b2] "
             } font-bold opacity-0 group-hover:opacity-100 transition-opacity max-md:hidden`}
           >
             <p>
-            <p className="  line-through text-[10px]"> {data.items[2]?.main_price_formatted}</p>
-
+              <p className="  line-through text-[10px]">
+                {" "}
+                {data.items[2]?.main_price_formatted}
+              </p>
             </p>
             {data.items[2]?.main_price_formatted
               ? `${data.items[2]?.price_formatted}`

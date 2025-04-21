@@ -197,7 +197,6 @@ export default function ClientPage() {
           if (res.success) {
             setTotalItems(res.data.total_items);
             setquantityProduct((prev) => prev - 1);
-            toast.success("محصول با موفقیت اضافه شد");
             res.data.items.some((item: { id: number; quantity: number }) => {
               if (item.id === Number(id)) {
                 setquantity(item.quantity);
@@ -632,10 +631,10 @@ export default function ClientPage() {
       
                             <div className="flex flex-col mr-4 text-customGray">
                               <span className="font-extralight text-sm line-clamp-1">
-                                {detail.value}
+                                {detail.title}
                               </span>
                               <span className="font-light line-clamp-1">
-                                {detail.title}
+                                {detail.value}
                               </span>
                             </div>
                           </div>
@@ -879,7 +878,7 @@ export default function ClientPage() {
             </Link>
           </div>
           <div className="mt-9  max-md:mt-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4  gap-8 px-5 max-md:mb-0 mb-20">
-            {collection?.data?.slice(0, 4).map((item: BookItem) => (
+            {collection?.data?.slice(0, 4).map((item: CollectionData) => (
               <CollectionListBox key={item.id} data={item} />
             ))}
           </div>

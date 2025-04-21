@@ -111,13 +111,12 @@ export default function PopUpGallery({
                     }`}
                   >
                     {isVideo(item.main_link) ? (
-                      <img
+                      <div
                         onClick={() => setImagIndex(index)}
-                        className="w-[80px] h-[80px] rounded-2xl cursor-pointer"
-                        // src={item[1].main_link}
-                      
-                        alt=""
-                      />
+                        className="w-[80px] h-[80px] bg-gray-200 flex items-center justify-center rounded-2xl cursor-pointer"
+                      >
+                        🎬
+                      </div>
                     ) : (
                       <img
                         onClick={() => setImagIndex(index)}

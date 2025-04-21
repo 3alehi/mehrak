@@ -9,10 +9,9 @@ import { Swiper as SwiperComponent, SwiperSlide, SwiperRef } from "swiper/react"
 import { Swiper } from "swiper/types";
 import BoxProduct from "../BoxProduct";
 
-// Define the product interface to match BoxProduct requirements
 interface Product {
-  id: number; // Changed to number only
-  media_files: { main_link: string }[]; // Changed to array of objects with main_link
+  id: number; 
+  media_files: { main_link: string, conversion_links: { large_thumbnail_260_260: string }, collection_name: string  }[]; 
   title: string;
   main_price_formatted: string;
   price_formatted: string;
@@ -20,7 +19,6 @@ interface Product {
   main_price: number;
 }
 
-// Define props interface
 interface SpecialProps {
   data: {
     data: {

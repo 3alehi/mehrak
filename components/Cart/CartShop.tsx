@@ -20,7 +20,7 @@ import ChangeToNextBuy from "../icons/ChangeToNextBuy";
 import { emptyCart } from "@/utils/api/exptyCart";
 import toast from "react-hot-toast";
 import { getTokenFromCookie } from "@/utils/helper/getCooki";
-import { getAllProducts, getTotalPrice } from "@/utils/helper/setProductBuy";
+import { getAllProducts, getTotalPrice, prevTotalPrice } from "@/utils/helper/setProductBuy";
 import { useTotalItems } from "@/app/context/ContextCartShop";
 
 const CartShop: React.FC = () => {
@@ -43,10 +43,13 @@ const CartShop: React.FC = () => {
     isLoading,
     refetch,
   } = useQuery({
-    queryKey: ["cart"],
+    queryKey: ["cartShopProfile"],
     queryFn: getCart,
-    
+    refetchOnWindowFocus: false,
+    refetchInterval: false,
+    gcTime: 0, // به جای cacheTime
   });
+  
 
   const { setTotalItems, totalItems } = useTotalItems();
   useEffect(() => {
@@ -95,7 +98,7 @@ const CartShop: React.FC = () => {
       {getTokenFromCookie() ? (
         <>
           <div className="grid grid-cols-[auto_340px] max-md:grid-cols-1">
-            <div className="py-6 px-6 max-md:py-3">
+            <div className="py-6 px-6 max-md:px-4 max-md:py-3">
               <div className="flex justify-between items-center">
                 <div className="flex">
                   <p className="text-customGray ml-6 font-medium	 ">
@@ -153,7 +156,7 @@ const CartShop: React.FC = () => {
               </div>
             </div>
 
-            <div className="py-4 pr-5 pl-3 border-r border-lightGrayBlue max-md:hidden">
+            <div className="py-4 pr-5 pl-3 border-r border-lightGrayBlue max-md:">
               <div className="bg-lightBlueGray py-7 rounded-2xl px-4 text-charcoal">
                 <div className="flex justify-between ">
                   <div className="">
@@ -187,7 +190,7 @@ const CartShop: React.FC = () => {
                   </div>
                 )}
 
-                <div className="w-full justify-center flex items-center mt-9">
+                <div className="w-full justify-center flex items-center mt-9 max-md:hidden">
                   <Link
                     href={
                       getTokenFromCookie()
@@ -215,9 +218,10 @@ const CartShop: React.FC = () => {
                   }
                   className="bg-customRed  text-white text-sm font-bold px-16 py-3 rounded-lg"
                 >
-                  پرداخت
-                </Link>
-                <div className="flex flex-col">
+ <p className="block max-md:hidden">                پرداخت
+                </p>
+                <p className="hidden max-md:block">ادامه</p>                </Link>
+                <div className="flex flex-col max-md:hidden">
                   <p className="text-[10px] font-light text-customGray 	">
                     مبلغ قابل پرداخت
                   </p>
@@ -295,40 +299,45 @@ const CartShop: React.FC = () => {
             </div>
           </div>
 
-          <div className="py-4 pr-5 pl-3 border-r border-lightGrayBlue max-md:hidden">
+          <div className="py-4 pr-5 pl-3 border-r border-lightGrayBlue max-md:">
             <div className="bg-lightBlueGray py-7 rounded-2xl px-4 text-charcoal">
               <div className="flex justify-between ">
                 <div className="">
                   <p className="text-sm font-light">
                     {`قیمت محصول${totalItems > 1 ? "ات" : ""} (${totalItems})`}
                   </p>
-                  <p className="text-lg font-medium mt-2	">جمع سبد خرید</p>
+                  <p className="text-lg font-medium mt-2  max-md:text-sm	">جمع سبد خرید</p>
                 </div>
                 <div className="flex flex-col items-end">
                   <p className="text-sm font-light">
                     {getTotalPrice().toLocaleString()}تومان
                   </p>
-                  <p className="text-lg font-medium	  mt-2">
-                    {getTotalPrice().toLocaleString()}
+                  <p className="text-lg font-medium	 max-md:text-sm  mt-2">
+                    {getTotalPrice().toLocaleString()} تومان
                   </p>
                 </div>
               </div>
-              <p className="my-5 h-1 w-full border-t border-lightGrayBlue border-3"></p>
-              {false && (
+              <p className="my-5 h-1  w-full border-t border-lightGrayBlue border-3"></p>
+              {true && (
                 <div className="flex justify-between text-customRed text-base font-medium">
                   <p>سود شما از خرید</p>
                   <p>
-                    {/* {`(${(
-              (loacaProduct.profit / loacaProduct.total_main_price) *
+  ( {((100 * (prevTotalPrice() - getTotalPrice())) / prevTotalPrice()).toFixed(0)}٪ )
+  {(prevTotalPrice() - getTotalPrice()).toLocaleString()} تومان 
+</p>
+
+                  {/* <p>
+                    {`(${(
+              (loacalProduct.profit / loacalProduct.total_main_price) *
               100
             ).toFixed(0)}٪)`}{" "}
-            {loacaProduct.profit_formatted} */}
-                    asfdsaf
-                  </p>
+            {loacalProduct.profit_formatted}
+                    
+                  </p> */}
                 </div>
               )}
 
-              <div className="w-full justify-center flex items-center mt-9">
+              <div className="w-full justify-center flex items-center mt-9 max-md:hidden">
                 <Link
                   href={
                     getTokenFromCookie() ? "/shipping" : "/login?redirect=true"
@@ -338,13 +347,17 @@ const CartShop: React.FC = () => {
                   ادامه
                 </Link>
               </div>
+              <p className="mt-5 text-sm font-extralight	text-charcoal leading-9 hidden max-md:block">
+              مبلغ سفارش هنوز پرداخت نشده‌ و در صورت اتمام موجودی، کالاها از سبد
+              حذف می‌شوند.
+            </p>
             </div>
-            <p className="mt-5 text-sm font-extralight	text-charcoal leading-9">
+            <p className="mt-5 text-sm font-extralight block max-md:hidden	text-charcoal leading-9">
               مبلغ سفارش هنوز پرداخت نشده‌ و در صورت اتمام موجودی، کالاها از سبد
               حذف می‌شوند.
             </p>
           </div>
-          <div className="hidden max-md:block fixed bottom-0 py-2 px-4 bg-light-gray w-full shadow-2xl">
+          <div className="hidden z-10 max-md:block fixed bottom-0 py-2 px-4 bg-light-gray w-full shadow-2xl">
             <div className="flex justify-between">
               <Link
                 href={
@@ -352,9 +365,11 @@ const CartShop: React.FC = () => {
                 }
                 className="bg-customRed  text-white text-sm font-bold px-16 py-3 rounded-lg"
               >
-                پرداخت
+                <p className="block max-md:hidden">                پرداخت
+                </p>
+                <p className="hidden max-md:block">ادامه</p>
               </Link>
-              <div className="flex flex-col">
+              <div className="flex flex-col max-md:hidden">
                 <p className="text-[10px] font-light text-customGray 	">
                   مبلغ قابل پرداخت
                 </p>

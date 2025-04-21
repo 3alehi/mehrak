@@ -1,5 +1,6 @@
 import React from "react";
 import CartSoon from "../icons/CartSoon";
+import Link from "next/link";
 
 const EmptyCart: React.FC = () => {
   return (
@@ -13,10 +14,10 @@ const EmptyCart: React.FC = () => {
             <p className="text-customGray text-xl font-black max-md:text-sm	">سبد خرید شما خالی است!</p>
             <p className="font-light text-customGray max-md:text-sm">برای انتخاب محصولات به صفحات زیر بروید:</p>
             <div className="flex flex-row justify-between w-full font-medium max-md:text-xs	text-customRed mt-5">
-                <p>فروش ویژه</p>
+                <Link href={"/special"}>فروش ویژه</Link>
                 <span className="text-customGray text-xl	
                 ">|</span>
-                <p>کتاب‌های پرفروش</p>
+                <Link href={"/category/7"}>کتاب‌های پرفروش</Link>
                  </div>
         </div>
       </div>

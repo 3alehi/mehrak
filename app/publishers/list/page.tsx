@@ -4,12 +4,11 @@ import { getPublisher } from "@/utils/api/getPublisher";
 import { Metadata } from "next";
 import React from "react";
 export const metadata: Metadata = {
-  title: 'پدیدآورندگان مطرح امروز',
+  title: 'ناشرین مطرح امروز',
   description: '...',
 }
 export default async function Page() {
   const data = await getPublisher();
-  console.log(data);
 
   return (
     <div className="mb-[178px] max-md:mb-[69px]">
@@ -18,17 +17,16 @@ export default async function Page() {
         style={{ backgroundImage: "url('/Baner.png')" }}
       >
         <h1 className="font-black text-4xl text-customGray max-md:text-xl">
-          پدیدآورندگان
-        </h1>
+ناشرین        </h1>
       </div>
       <p className="w-full hidden max-md:flex justify-center mb-12 font-black text-customGray">
         {" "}
-        پدیدآورندگان مطرح امروز
+        ناشرین مطرح امروز
       </p>
       <div className="grid grid-cols-[410px_auto] max-md:grid-cols-1 gap-x-5 max-md:">
         <div className="w-full max-md:hidden h-[159px]  bg-light-gray rounded-r-2xl py-8 px-11 flex flex-col justify-center items-start text-center">
           <p className="text-customGray font-black text-2xl">
-          پدیدآورندگان مطرح امروز          </p>
+          ناشرین مطرح امروز          </p>
         </div>
 
         <ListPublisherBox data={data} />
@@ -38,6 +36,7 @@ export default async function Page() {
           (
             item: {
               name: string;
+              id:string;
               books_count: number;
               media_files: MediaFile[];
             },

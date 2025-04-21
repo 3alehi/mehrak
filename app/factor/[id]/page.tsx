@@ -8,26 +8,23 @@ import { useParams } from "next/navigation";
 import React from "react";
 
 export default function Page() {
-
-
   const { id } = useParams();
   const { data, isLoading } = useQuery({
-    queryKey: ["getOrderByID" , id],
-    queryFn : ()=> getOrderByID(id as string),
+    queryKey: ["getOrderByID", id],
+    queryFn: () => getOrderByID(id as string),
   });
-
 
   const convertPersianDate = (persianDate: string): string => {
     // Split the input string into day, month, and year
-    const [day, month, year] = persianDate.split('-');
-    
+    const [day, month, year] = persianDate.split("-");
+
     // Return the date in the desired format: year-month-day
     return `${year}-${month}-${day}`;
   };
 
-    const handlePrint = () => {
-      window.print(); // دستور برای باز کردن دیالوگ پرینت
-    };
+  const handlePrint = () => {
+    window.print(); // دستور برای باز کردن دیالوگ پرینت
+  };
   const items = [
     {
       id: 1,
@@ -48,8 +45,8 @@ export default function Page() {
       tax: 0,
     },
   ];
-  if(isLoading){
-    return "..."
+  if (isLoading) {
+    return "...";
   }
   return (
     <div className="w-full  max-md:px-4 text-[#2C2323] mb-10">
@@ -58,13 +55,40 @@ export default function Page() {
           <Image alt="mehra-logo" src={"/logo.svg"} width={147} height={66} />
         </Link>
         <div className="flex items-center">
-          <button       onClick={handlePrint}
- className="ml-8 text-2xl font-bold text-white bg-turquoise rounded-2xl w-[306px] h-[60px]">
-            پرینت / دانلود
-          </button>
+  <>
+    <style>
+      {`
+        @media print {
+          @page {
+            size: 11in 17in landscape;
+            margin: 0.25in;
+          }
 
-          <Share />
-        </div>
+          body {
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+          }
+
+          .no-print {
+            display: none !important;
+          }
+        }
+      `}
+    </style>
+
+    <button
+      onClick={handlePrint}
+      className="no-print ml-8 text-2xl font-bold text-white bg-turquoise rounded-2xl w-[306px] h-[60px]"
+    >
+      پرینت / دانلود
+    </button>
+  </>
+
+  <div className="no-print">
+    <Share />
+  </div>
+</div>
+
       </div>
       <div className="mt-5 w-full">
         <p className="flex justify-center font-medium text-xl text-customGray">
@@ -75,7 +99,8 @@ export default function Page() {
             <div className="bg-lightBlueGray border border-lightGrayBlue rounded-2xl text-lg  py-3 px-6 flex flex-col font-light  text-[#2C2323] ">
               <div className=" flex items-center w-full ">
                 <p className="font-extrabold  ml-[170px] ">
-                  خریدار: <span className="font-light">{data.address.first_name}</span>
+                  خریدار:{" "}
+                  <span className="font-light">{data.address.first_name}</span>
                 </p>
                 <p className="ml-[190px]"> شناسه ملی: </p>
                 <p className="ml-[76px]"> شماره ثبت: </p>
@@ -126,41 +151,51 @@ export default function Page() {
                 <th className="pb-4">مبلغ واحد (تومان)</th>
                 <th className="pb-4"> مبلغ کل پس از تخفیف (تومان)</th>
                 <th className="pb-4">مالیات و عوارض (تومان)</th>
-                <th className="pb-4">جمع کل پس از تخفیف و<br />
-                مالیات و عوارض (تومان)</th>
+                <th className="pb-4">
+                  جمع کل پس از تخفیف و<br />
+                  مالیات و عوارض (تومان)
+                </th>
               </tr>
             </thead>
             <tbody>
-              {data.items.map((item: {id : number , title:string , number : number , price_formatted : string ,total_formatted:string  },_ : number) => (
-                <tr key={item.id} className="border-b text-right">
-                  <td className="p-3 border-l">{_ +1}</td>
-                  <td className="p-3 border-l">no data</td>
-                  <td className="p-3 border-l truncate max-w-[235px]">
-                    {item.title}
-                  </td>
-                  <td className="p-3 border-l">{item.number}</td>
-                  <td className="p-3 border-l">
-                    {item.price_formatted.toLocaleString()} تومان
-                  </td>
-                  <td className="p-3 border-l">
-                    {item.total_formatted.toLocaleString()} تومان
-                  </td>
-                  <td className="p-3 border-l">
-                    0
-                  
-                  </td>
-                  <td className="p-3">
-                    {item.total_formatted.toLocaleString()} تومان
-                  </td>
-                </tr>
-              ))}
+              {data.items.map(
+                (
+                  item: {
+                    id: number;
+                    title: string;
+                    number: number;
+                    price_formatted: string;
+                    total_formatted: string;
+                  },
+                  _: number
+                ) => (
+                  <tr key={item.id} className="border-b text-right">
+                    <td className="p-3 border-l">{_ + 1}</td>
+                    <td className="p-3 border-l">no data</td>
+                    <td className="p-3 border-l truncate max-w-[235px]">
+                      {item.title}
+                    </td>
+                    <td className="p-3 border-l">{item.number}</td>
+                    <td className="p-3 border-l">
+                      {item.price_formatted.toLocaleString()} تومان
+                    </td>
+                    <td className="p-3 border-l">
+                      {item.total_formatted.toLocaleString()} تومان
+                    </td>
+                    <td className="p-3 border-l">0</td>
+                    <td className="p-3">
+                      {item.total_formatted.toLocaleString()} تومان
+                    </td>
+                  </tr>
+                )
+              )}
             </tbody>
           </table>
           <div className="flex justify-between items-center bg-white p-4 rounded-b-xl border">
             <p>جمع کل</p>
             <p>
               {items
-                .reduce((sum, item) => sum + item.total , 0)
+                .reduce((sum, item) => sum + item.total, 0)
                 .toLocaleString()}{" "}
               تومان
             </p>

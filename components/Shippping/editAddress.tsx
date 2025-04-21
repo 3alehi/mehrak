@@ -220,14 +220,14 @@ const EditAddress: React.FC<EditAddressProps> = ({
             value={address}
             onChange={(e) => handleChange(e, "address")}
             placeholder=" آدرس کامل"
-            className="resize-none mt-2 border border-lightGrayBlue2 rounded-md py-3 px-4 outline-none "
+            className="resize-none mt-0 border border-lightGrayBlue2 rounded-md py-3 px-4 outline-none "
           />
           {errors.address && (
             <p className="text-red-500 text-xs">{errors.address}</p>
           )}
         </div>
         <div className="grid grid-cols-1 grid-rows-2 mt-6 gap-x-5">
-          <p>کدپستی</p>
+          <p className="flex justify-end flex-col">کدپستی</p>
           <Input
             value={postalCode}
             onChange={(e) => handleChange(e, "postalCode")}
@@ -241,7 +241,7 @@ const EditAddress: React.FC<EditAddressProps> = ({
         </div>
         <div className="mt-6">
           <p>تحویل گیرنده</p>
-          <div className="mt-4">
+          <div className="mt-">
             <div className="grid px-2 grid-cols-2 justify-evenly border rounded-md py-2">
               <p
                 className={`cursor-pointer flex justify-center items-center text-center py-2 rounded-xl transition-all duration-300 ${
@@ -268,8 +268,8 @@ const EditAddress: React.FC<EditAddressProps> = ({
         </div>
         {lastName && firstName && gender !== "1" && (
           <div className="grid grid-cols-2 grid-rows-2 mt-6 gap-x-5">
-            <p>نام</p>
-            <p>نام خانوادگی</p>
+            <p className="flex justify-end flex-col">نام</p>
+            <p className="flex justify-end flex-col">نام خانوادگی</p>
             <Input
               value={receiverName}
               onChange={(e) => setReceiverName(e.target.value)}
@@ -287,7 +287,7 @@ const EditAddress: React.FC<EditAddressProps> = ({
 
         {gender !== "1" && (
           <div className="grid grid-cols-1 grid-rows-2 mt-6 gap-x-5">
-            <p>تلفن همراه تحویل گیرنده</p>
+            <p className="flex justify-end flex-col">تلفن همراه تحویل گیرنده</p>
             <Input
               value={phone}
               onChange={(e) => handleChange(e, "phone")}

@@ -119,7 +119,7 @@ const Page: React.FC = () => {
                     <p className="text-lg text-customGray mt-4">
                       لیستی ذخیره نکرده‌اید{" "}
                     </p>
-                    <p className="text-aquaBlue">مشاهده لیست‌ها</p>
+                    <Link href={"/collections/list"} className="text-aquaBlue">مشاهده لیست‌ها</Link>
                   </div>
                 </div>
               </div>

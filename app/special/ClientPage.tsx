@@ -9,13 +9,26 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import { Autoplay, Navigation } from "swiper/modules";
-import { Swiper as SwiperComponent, SwiperSlide, SwiperRef } from "swiper/react";
+import {
+  Swiper as SwiperComponent,
+  SwiperSlide,
+  SwiperRef,
+} from "swiper/react";
 import { Swiper } from "swiper/types";
 
 // Define the product interface
+interface MediaFile {
+  main_link: string;
+  conversion_links?: {
+    thumbnail_192_192?: string;
+    large_thumbnail_260_260?: string;
+  };
+  collection_name?: string;
+}
+
 interface Product {
   id: number;
-  media_files: { main_link: string }[];
+  media_files: MediaFile[];
   title: string;
   main_price_formatted: string;
   price_formatted: string;
@@ -25,23 +38,20 @@ interface Product {
 
 // Define the API response interface
 
-
 export default function ClientPage() {
   const [page, setPage] = useState<number>(1);
-  const [firstPageData, setFirstPageData] = useState([]); 
+  const [firstPageData, setFirstPageData] = useState([]);
 
   const { data, isLoading } = useQuery({
     queryKey: ["Book", page],
     queryFn: () => getSpecial("1", page),
-  
-
   });
 
-  useEffect(()=>{
-if(isLoading == false && data && page === 1 ){
-  setFirstPageData(data.data)
-}
-  },[data,isLoading])
+  useEffect(() => {
+    if (isLoading == false && data && page === 1) {
+      setFirstPageData(data.data);
+    }
+  }, [data, isLoading]);
   const swiperRef = useRef<SwiperRef | null>(null);
   const [isBeginning, setIsBeginning] = useState<boolean>(true);
   const [isEnd, setIsEnd] = useState<boolean>(false);
@@ -67,11 +77,7 @@ if(isLoading == false && data && page === 1 ){
     return (
       <div className="container mx-auto mt-16 max-md:mt-5 max-md:px-4">
         <div className="h-[671px]  w-full max-md:h-[336px]">
-          <div
-            className="h-[671px] w-full bg-cover bg-center container mx-auto py-8 max-md:px-4"
-          >
-     
- 
+          <div className="h-[671px] w-full bg-cover bg-center container mx-auto py-8 max-md:px-4">
             {/* اسکلتون لودینگ برای اسلایدر محصولات */}
             <div className="flex mt-7 max-md:mt-2">
               <SwiperComponent
@@ -113,11 +119,14 @@ if(isLoading == false && data && page === 1 ){
             </div>
           </div>
         </div>
-  
+
         {/* اسکلتون لودینگ برای محصولات */}
         <div className="grid grid-cols-4 max-md:grid-cols-1 max-md:gap-y-2">
           {[...Array(4)].map((_, index) => (
-            <div key={index} className="border rounded-lg py-1 px-4 bg-white animate-pulse">
+            <div
+              key={index}
+              className="border rounded-lg py-1 px-4 bg-white animate-pulse"
+            >
               <div className="w-full flex justify-center">
                 {/* اسکلتون لودینگ برای تصویر */}
                 <div className="h-[250px] w-[250px] max-md:w-[133px] bg-gray-300"></div>
@@ -137,7 +146,7 @@ if(isLoading == false && data && page === 1 ){
             </div>
           ))}
         </div>
-  
+
         {/* اسکلتون لودینگ برای صفحه بندی */}
         <div className="my-19 max-md:mt-8">
           <div className="h-8 w-24 bg-gray-300 animate-pulse mx-auto"></div>
@@ -145,12 +154,9 @@ if(isLoading == false && data && page === 1 ){
       </div>
     );
   }
-  
-  
 
   return (
     <div>
-  
       <div className="h-[671px] bg-[#CC2229] w-full max-md:h-[336px]">
         <div
           className="h-[671px] w-full bg-cover bg-center container mx-auto py-8 max-md:px-4"
@@ -227,7 +233,22 @@ if(isLoading == false && data && page === 1 ){
                   <BoxProduct
                     key={index}
                     id={item.id}
-                    src={item.media_files}
+                    src={item.media_files.map((file, fileIndex) => ({
+                      main_link: file.main_link,
+                      conversion_links: {
+                        large_thumbnail_260_260:
+                          file.conversion_links?.large_thumbnail_260_260 ||
+                          file.conversion_links?.thumbnail_192_192 ||
+                          file.main_link,
+                        thumbnail_192_192:
+                          file.conversion_links?.thumbnail_192_192,
+                      },
+                      collection_name:
+                        file.collection_name ||
+                        (fileIndex === 0
+                          ? "normal_product_main_image"
+                          : "normal_product_gallery_image"), // تخصیص پیش‌فرض
+                    }))}
                     title={item.title}
                     main_price_formatted={item.main_price_formatted}
                     price_formatted={item.price_formatted}
@@ -246,6 +267,7 @@ if(isLoading == false && data && page === 1 ){
           {data?.data.map((item: Product, index: number) => (
             <ColletionBox
               key={index}
+              counter={index}
               id={item.id}
               src={item.media_files}
               title={item.title}

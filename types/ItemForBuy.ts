@@ -1,13 +1,16 @@
 interface ItemForBuy {
-    id: number;
-    media_files: {
-      main_link: string;
-    }[];
-    title: string;
-    structure_title: string;
-    old_main_price: number;
-    price: number;
-    quantity: number;
-    in_stock_count : number ;
-    price_formatted : string ;
-  }
+  id: number;
+  title: string;
+  structure_title: string;
+  media_files: {
+    main_link: string;
+    conversion_links: {
+      large_thumbnail_260_260: string;
+    };
+  }[];
+  price: number;
+  main_price: number; 
+  price_formatted:number;
+  quantity: number;
+  in_stock_count: number;
+}

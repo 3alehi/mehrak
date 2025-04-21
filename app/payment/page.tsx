@@ -25,6 +25,9 @@ const Page: React.FC = () => {
   const { data, isLoading, refetch } = useQuery({
     queryKey: ["cart"],
     queryFn: getCart,
+    refetchOnWindowFocus: false,
+    refetchInterval: false,
+    gcTime: 0, // به جای cacheTime
   });
 
   useEffect(() => {
@@ -120,7 +123,7 @@ const Page: React.FC = () => {
     );
   }
   return (
-    <div className="w-full flex flex-col items-center justify-center mt-32 max-md:mt-4 pb-8">
+    <div className="w-full flex flex-col items-center justify-center mt-16 max-md:mt-4 pb-8">
       {/* لوگو */}
       <Link href={"/"}>
         <Image
@@ -206,8 +209,12 @@ const Page: React.FC = () => {
                         }}
                       />
                       <p
-                        className="flex text-aquaBlue items-center cursor-pointer"
-                        onClick={discount}
+                        className={`flex text-aquaBlue items-center  ${offValue === "" ? 'cursor-not-allowed' : "cursor-pointer"}`}
+                        onClick={()=>{
+                          if(offValue != ""){
+                            discount()
+                          }
+                        }}
                       >
                         <span className="text-lg ml-2">ثبت</span>
                         <span className="text-aquaBlue">

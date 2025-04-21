@@ -12,7 +12,14 @@ interface CollectionProps {
   price_formatted: string;
   price: number;
   main_price: number;
-  src: { main_link: string }[];
+  src: {
+    main_link: string;
+    conversion_links?: {
+      thumbnail_192_192?: string;
+      large_thumbnail_260_260?: string;
+    };
+    collection_name?: string;
+  }[];
   key: number;
   page: number;
 }
@@ -28,13 +35,21 @@ const BoxProduct: React.FC<CollectionProps> = ({
 }) => {
   const [isHovered, setIsHovered] = useState(false);
 
-  const imageSrc =
-    src.length > 1
-      ? isHovered && src[2]?.main_link
-        ? src[2].main_link
-        : src[1].main_link
-      : src[0]?.main_link;
+  // پیدا کردن تصویر جلو و پشت کتاب یا تصویر پیش‌فرض
+  const frontImage = src.find((image) => image.collection_name === "book_front_image");
+  const backImage = src.find((image) => image.collection_name === "book_back_image");
+  const normalProductImage = src.find((image) => image.collection_name === "normal_product_main_image");
+
+  const imageSrc = isHovered && backImage?.conversion_links?.large_thumbnail_260_260
+  ? backImage.conversion_links.large_thumbnail_260_260
+  : frontImage?.conversion_links?.large_thumbnail_260_260
+  ? frontImage.conversion_links.large_thumbnail_260_260
+  : normalProductImage?.conversion_links?.large_thumbnail_260_260
+  ? normalProductImage.conversion_links.large_thumbnail_260_260
+  : "";
+
   const pathname = usePathname();
+
   return (
     <Link href={`/product/${id}`}>
       <div
@@ -55,26 +70,14 @@ const BoxProduct: React.FC<CollectionProps> = ({
                   : "max-md:h-[133px]"
               } max-md:w-[133px] `}
             >
-              {/* <Image
-                quality={100}
-                width={100}
-                height={100}
-                
-                src={imageSrc}
-                alt={title}
-                className="object-contain transition-opacity duration-700 ease-in-out w-full h-full blur-md opacity-0"
-                onLoadingComplete={(e) => {
-                  e.classList.remove("blur-md", "opacity-0");
-                  e.classList.add("opacity-100");
-                }}
-                loading="lazy"
-                sizes="(max-width: 600px) 500px, 1000px"
-              /> */}
-              <img
-                src={imageSrc}
-                alt={title}
-                className="object-contain transition-opacity duration-700 ease-in-out w-full h-full "
-              />
+              {/* اگر تصویر موجود بود، آن را نمایش می‌دهیم */}
+              {imageSrc && (
+                <img
+                  src={imageSrc}
+                  alt={title}
+                  className="object-contain transition-opacity duration-700 ease-in-out w-full h-full "
+                />
+              )}
             </div>
           </div>
         </div>
@@ -83,7 +86,7 @@ const BoxProduct: React.FC<CollectionProps> = ({
           {pathname != "/" && (
             <>
               <p
-                className={`mt-1 text-charcoal text-lg font-ligh h-[78px] max-md:text-[10px] ${
+                className={`mt-1 text-charcoal text-lg font-light h-[78px] max-md:text-[10px] ${
                   pathname.includes("/special")
                     ? "max-md:h-0 "
                     : "max-md:h-[41px]"

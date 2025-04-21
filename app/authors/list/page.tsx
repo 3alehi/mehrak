@@ -48,6 +48,7 @@ export default async function Page() {
           (
             item: {
               name: string;
+              id:string;
               books_count: number;
               media_files: MediaFile[];
             },

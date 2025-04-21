@@ -1,13 +1,14 @@
 'use client';
 import { ArrowLeft, ArrowRight } from "lucide-react";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useRouter } from 'next/navigation'; 
 
 interface PaginationProps {
   totalPages: number;
   maxVisiblePagesDesktop?: number;
-  maxVisiblePagesMobile?: number; 
-  setPage: (page: number) => void; 
-  currentPage2 : number
+  maxVisiblePagesMobile?: number;
+  setPage: (page: number) => void;
+  currentPage2?: number; // صفحه پیش‌فرض از URL گرفته می‌شود
 }
 
 const Pagination: React.FC<PaginationProps> = ({
@@ -17,16 +18,28 @@ const Pagination: React.FC<PaginationProps> = ({
   currentPage2,
   setPage,
 }) => {
-  const [currentPage, setCurrentPage] = useState(currentPage2);
+  const [currentPage, setCurrentPage] = useState(currentPage2 || 1); // اگر currentPage2 داده نشد، از 1 شروع کن
+  const router = useRouter();
+
+  useEffect(() => {
+    // اگر شماره صفحه از URL موجود است، آن را از URL بگیریم
+    const queryPage = new URLSearchParams(window.location.search).get('page');
+    if (queryPage) {
+      setCurrentPage(Number(queryPage));
+    }
+  }, []);
 
   const goToPage = (page: number) => {
     if (page >= 1 && page <= totalPages) {
       window.scrollTo({
         top: 0,
-        behavior: 'smooth' 
+        behavior: 'smooth'
       });
       setCurrentPage(page);
       setPage(page);
+
+      // به‌روزرسانی شماره صفحه در URL
+      router.push(`?page=${page}`);
     }
   };
 

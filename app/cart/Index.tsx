@@ -46,7 +46,6 @@ const Index: React.FC = () => {
     setActiveItem(item.id);
   };
 
-  // تا زمانی که کلاینت آماده نشود، چیزی رندر نکن
   if (!isClient) return null;
 
   return (

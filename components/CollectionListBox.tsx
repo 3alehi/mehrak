@@ -14,7 +14,6 @@ interface Item {
   // اگر فیلدهای دیگری هم وجود دارند می‌توانید اضافه کنید
 }
 export default function CollectionListBox({ data }: CollectionListBoxProps) {
-  console.log(data);
   
   const maxImages = 4;
   const itemsToShow = data.items.slice(0, maxImages);
@@ -41,9 +40,9 @@ export default function CollectionListBox({ data }: CollectionListBoxProps) {
             <Image
               src={item.media_files[1]?.main_link ?? item.media_files[0]?.main_link}
               alt=""
-              width={202}
-              height={202}
-              className="w-[202px] h-[202px] max-md:w-[157px] max-md:h-[157px] object-cover"
+              width={148}
+              height={148}
+              className={`${pathname === '/' ? 'w-[202.7px] h-[202.7px]': 'w-[148px] h-[148px]'} max-md:w-[157px] max-md:h-[157px] object-cover`}
             />
             {/* div جدید روی هر عکس */}
         {pathname === "/" &&(

@@ -71,7 +71,7 @@ const Page = () => {
       <div className="border  mb-10 border-lightGrayBlue2 pb-6 max-md:rounded-none max-md:border-none rounded-2xl text-darkGray">
         <div className="bg-lightBlueGray rounded-t-2xl max-md:rounded-none px-7 max-md-px-4 py-5">
           <div className="flex max-md:hidden justify-between items-center">
-            <p className="text-2xl flex items-center font-normal">
+            <p className="text-xl flex items-center font-medium">
               <i className="cursor-pointer mx-3" onClick={() => router.back()}>
                 <Back />
               </i>
@@ -153,7 +153,7 @@ const Page = () => {
           </div>
           <br />
           <p className="mx-5 max-md:mx-0">
-            <span className="font-extralight"> آدرس </span> <br />
+            <span className="font-extralight"> آدرس: </span>
             <span className="">{data.address.full_address}</span>
           </p>
         </div>
@@ -180,7 +180,7 @@ const Page = () => {
             </p>
           </div>
           <div
-            className={`mt-4 overflow-hidden transition-all duration-500 ease-in-out max-md:px-4 ${
+            className={`mt-4 overflow-hidden transition-all duration-500 ease-in-out max-md:px-4  mb-5 ${
               isOpen ? "max-h-[1000px] opacity-100" : "max-h-0 opacity-0"
             }`}
           >

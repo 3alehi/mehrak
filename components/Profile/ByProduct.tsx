@@ -13,6 +13,7 @@ interface ByProductProps {
   };
 }
 const ByProduct: React.FC<ByProductProps> = ({ items }) => {
+  
   return (
     <>
       {items.line_item_type === "product" && (
@@ -22,7 +23,7 @@ const ByProduct: React.FC<ByProductProps> = ({ items }) => {
               <Image
                 alt="product image"
                 src={items.media_files[0].main_link || "fallback-image-url"}
-                className="w-36 h-48 max-md:w-[113px] max-md:h-[113px]"
+                className="w-36 h-48 max-md:w-[113px] max-md:h-[113px] object-contain"
                 loading="lazy"
                 width={36}
                 height={36}

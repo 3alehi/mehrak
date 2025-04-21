@@ -35,7 +35,7 @@ const Step: React.FC<StepProps> = ({ currentStep }) => {
                 router.push(`${step.route}`);
               }
             }}
-            className="flex flex-col items-center justify-center cursor-pointer relative z-10"
+            className="flex flex-col items-center justify-center cursor-pointer relative "
           >
             <p
               className={`text-2xl absolute -top-14 ${

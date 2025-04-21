@@ -77,6 +77,8 @@ export default function Page() {
         {bookData?.data?.map((item:BookItem, _: number) => (
           <ColletionBox
             key={_}
+            counter={_}
+
             id={item.id}
             src={item.media_files}
             title={item.title}

@@ -7,6 +7,7 @@ interface WriterItem {
   media_files: {
     main_link: string; // Assuming the main_link is a string URL
   }[];
+  id:string;
 }
 
 interface WriterProps {
@@ -73,13 +74,13 @@ export default function Writer({ data }: WriterProps) {
               key={_}
               className="w-[203px] h-[159px] max-md:w-full max-md:h-[85px] bg-light-gray rounded-2xl border border-lightGrayBlue relative flex justify-center"
             >
-              <div className="h-[128px] w-[128px] max-md:w-[67px] max-md:h-[67px] rounded-full bg-red-50 absolute border-8 max-md:border-4 border-[#F2F3F5] top-[-64px] max-md:top-[-32px] left-1/2 transform -translate-x-1/2">
+              <Link href={`/creator/${item.id}`} className="h-[128px] w-[128px] max-md:w-[67px] max-md:h-[67px] rounded-full bg-red-50 absolute border-8 max-md:border-4 border-[#F2F3F5] top-[-64px] max-md:top-[-32px] left-1/2 transform -translate-x-1/2">
                 <img
                   className="w-full h-full rounded-full object-cover"
                   src={item.media_files[0].main_link}
                   alt="امیرحسین"
                 />
-              </div>
+              </Link>
 
               <div className="mt-20 w-full px-3 max-md:mt-9">
                 <p className="w-full flex justify-center text-customGray text-xl font-light max-md:text-[10px]">
@@ -87,9 +88,9 @@ export default function Writer({ data }: WriterProps) {
                 </p>
                 <div className="w-full flex justify-between mt-4 max-md:mt-0 text-customGray text-sm font-extralight">
                   <p className=" max-md:text-[8px]">25 کتاب </p>
-                  <p className="cursor-pointer max-md:text-[8px]">
+                  <Link href={`creator/${item.id}`} className="cursor-pointer max-md:text-[8px]">
                     مشاهده آثار
-                  </p>
+                  </Link>
                 </div>
               </div>
             </div>

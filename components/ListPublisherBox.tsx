@@ -1,5 +1,6 @@
 "use client";
 import useIsMobile from "@/hooks/useIsMobile";
+import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React from "react";
 
@@ -7,6 +8,7 @@ interface Publisher {
   name: string;
   books_count: number;
   media_files: MediaFile[];
+  id:string;
 }
 
 interface ListPublisherBoxProps {
@@ -16,6 +18,7 @@ interface ListPublisherBoxProps {
 }
 
 export default function ListPublisherBox({ data }: ListPublisherBoxProps) {
+  
   const pathname = usePathname();
   return (
     <div>
@@ -25,13 +28,13 @@ export default function ListPublisherBox({ data }: ListPublisherBoxProps) {
             key={index}
             className="w-[203px] h-[159px] max-md:w-full max-md:h-[85px] bg-light-gray rounded-2xl border border-lightGrayBlue relative flex justify-center"
           >
-            <div className="h-[128px] w-[128px] max-md:w-[67px] max-md:h-[67px] rounded-full bg-red-50 absolute border-8 max-md:border-4 border-[#F2F3F5] top-[-64px] max-md:top-[-32px] left-1/2 transform -translate-x-1/2">
+            <Link href={`/${pathname.includes("publishers/list" )? "publisher" : "creator"}/${item.id}`} className="h-[128px] w-[128px] max-md:w-[67px] max-md:h-[67px] rounded-full bg-red-50 absolute border-8 max-md:border-4 border-[#F2F3F5] top-[-64px] max-md:top-[-32px] left-1/2 transform -translate-x-1/2">
               <img
                 className="w-full h-full rounded-full object-cover"
                 src={item.media_files[0]?.main_link ?? ""}
                 alt={item.name}
               />
-            </div>
+            </Link>
 
             <div className="mt-20 w-full px-3 max-md:mt-9">
               <p className="w-full flex justify-center text-customGray text-xl font-light max-md:text-[10px]">
@@ -47,7 +50,7 @@ export default function ListPublisherBox({ data }: ListPublisherBoxProps) {
                     </>
                   )}
                 </p>
-                <p className="cursor-pointer max-md:text-[8px]">مشاهده آثار</p>
+                <Link href={`/${pathname.includes("publishers/list" )? "publisher" : "creator"}/${item.id}`} className="cursor-pointer max-md:text-[8px]">مشاهده آثار</Link>
               </div>
             </div>
           </div>

@@ -176,3 +176,22 @@ body, html {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+/* index.css یا global.css */
+@media print {
+  @page {
+    size: tabloid landscape;
+    margin: 0.25in; /* یا minimum */
+  }
+
+  body {
+    -webkit-print-color-adjust: exact; /* برای حفظ رنگ‌ها */
+    print-color-adjust: exact;
+  }
+}
+@media print {
+  .no-print {
+    display: none !important;
+  }
+}
+

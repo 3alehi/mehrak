@@ -1,3 +1,4 @@
+'use client'
 import React, { useState } from 'react';
 import Sorting from '../icons/Sorting';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '../ui/dropdown-menu';

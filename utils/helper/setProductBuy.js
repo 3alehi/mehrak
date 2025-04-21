@@ -71,8 +71,11 @@ export function getTotalPrice() {
     return 0; // Return 0 if not on the client side
   }
 
-export function prevTotalPrice() {
+  export function prevTotalPrice() {
     let existingData = JSON.parse(localStorage.getItem('buyProduct')) || [];
 
-    return existingData.reduce((total, item) => total + (item.price * item.main_price), 0);
+    return existingData.reduce((total, item) => {
+        const quantity = item.quantity || 1; // اگر quantity نبود، پیش‌فرض ۱ بگیریم
+        return total + (quantity * item.main_price);
+    }, 0);
 }

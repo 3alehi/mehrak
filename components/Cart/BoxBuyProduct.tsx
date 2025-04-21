@@ -26,9 +26,13 @@ import {
 // import Warning from "../icons/Warning";
 import ReBack from "../icons/ReBack";
 import toast from "react-hot-toast";
+import { useTotalItems } from "@/app/context/ContextCartShop";
+import Link from "next/link";
+import calculatePriceDrop from "@/utils/helper/Offer";
 
 interface BoxBuyProductProps {
   item: ItemForBuy;
+  
   refetch: () => void;
   getProduct: () => void;
   setTotalItems: (total: number) => void;
@@ -38,14 +42,15 @@ const BoxBuyProduct: React.FC<BoxBuyProductProps> = ({
   item,
   refetch,
   getProduct,
-  setTotalItems,
 }) => {
   const isLogin = getTokenFromCookie();
+  const { totalItems, setTotalItems } = useTotalItems();
+
   const [loadingQuantity, setLoadingQuantity] = useState(false);
   const [disabled, setDisabled] = useState(false);
   const [LocalBuy, setLocalBuy] = useState(0);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-  const [timer, setTimer] = useState(7); 
+  const [timer, setTimer] = useState(7);
   const [intervalId, setIntervalId] = useState<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
@@ -59,9 +64,9 @@ const BoxBuyProduct: React.FC<BoxBuyProductProps> = ({
       }, 1000);
       setIntervalId(id);
 
-      return () => clearInterval(id); 
+      return () => clearInterval(id);
     } else if (timer === 0) {
-      handleConfirmDelete(); 
+      handleConfirmDelete();
     }
   }, [showDeleteConfirm, timer]);
 
@@ -72,6 +77,7 @@ const BoxBuyProduct: React.FC<BoxBuyProductProps> = ({
       addToCart(item.id, 1)
         .then(() => {
           refetch();
+          setTotalItems(totalItems + 1);
         })
         .finally(() => {
           setTimeout(() => {
@@ -92,6 +98,7 @@ const BoxBuyProduct: React.FC<BoxBuyProductProps> = ({
       removeToCart(item.id, 1)
         .then(() => {
           refetch();
+          setTotalItems(totalItems - 1);
         })
         .finally(() => {
           setTimeout(() => {
@@ -119,8 +126,8 @@ const BoxBuyProduct: React.FC<BoxBuyProductProps> = ({
   }
 
   const handleDeleteClick = () => {
-    setShowDeleteConfirm(true); 
-    setTimer(7); 
+    setShowDeleteConfirm(true);
+    setTimer(7);
   };
 
   const handleConfirmDelete = () => {
@@ -128,6 +135,8 @@ const BoxBuyProduct: React.FC<BoxBuyProductProps> = ({
       removeToCart(item.id, item.quantity).then((res) => {
         if (res.success) {
           toast.success("محصول با موفقیت حذف شد");
+          setTotalItems(totalItems - item.quantity);
+
           refetch();
         }
       });
@@ -140,7 +149,7 @@ const BoxBuyProduct: React.FC<BoxBuyProductProps> = ({
 
   // const handleCancelDelete = () => {
   //   setShowDeleteConfirm(false);
-  //   setTimer(7); 
+  //   setTimer(7);
   // };
 
   return (
@@ -152,34 +161,76 @@ const BoxBuyProduct: React.FC<BoxBuyProductProps> = ({
       >
         {!showDeleteConfirm && (
           <div className="flex max-md:w-full">
-            <div className="w-[193px] h-[193px] max-md:w-[113px] max-md:h-[113px] bg-lightGrayBlue">
-              <Image
-                alt="logo-mehra"
-                src={item.media_files[0].main_link}
-                width={167}
-                height={27}
-                unoptimized
-                className="object-contain w-full h-full"
-                onLoadingComplete={(e) => e.classList.remove("blur-sm")}
-                loading="lazy"
-              />
+            <div className="flex flex-col max-md:w-[113px] ">
+              <div className="w-[193px] h-[193px] max-md:w-full max-md:h-[113px] bg-lightGrayBlue flex items-center justify-center overflow-hidden">
+                <Link href={`/product/${item.id}`}>
+                  <Image
+                    alt="logo-mehra"
+                    src={
+                      item.media_files[item.media_files.length - 1]
+                        .conversion_links.large_thumbnail_260_260
+                    }
+                    width={193} // هم‌اندازه با کادر
+                    height={193} // هم‌اندازه با کادر
+                    unoptimized
+                    className="object-contain"
+                    onLoadingComplete={(e) => e.classList.remove("blur-sm")}
+                    loading="lazy"
+                  />
+                </Link>
+              </div>
+              <div className="bg-white  w-full max-md:px-4 h-[36px] mt-3 hidden max-md:flex rounded-full py-3 text-customGray  items-center justify-between text-sm">
+                <button
+                  className=" cursor-pointer  disabled:text-gray-200 disabled:cursor-not-allowed"
+                  onClick={handleAddToCart}
+                  disabled={disabled || item.in_stock_count <= item.quantity}
+                >
+                  +
+                </button>
+
+                <span className="">
+                  {loadingQuantity ? (
+                    <div className=" border-4 border-t-4 border-aquaBlue border-t-transparent rounded-full animate-spin"></div>
+                  ) : isLogin ? (
+                    item.quantity
+                  ) : (
+                    LocalBuy
+                  )}
+                </span>
+
+                <button
+                  className=" cursor-pointer disabled:text-gray-200 disabled:cursor-not-allowed"
+                  onClick={handleRemoveFromCart}
+                  disabled={disabled}
+                >
+                  {item.quantity == 1 || LocalBuy == 1 ? (
+                    <span className="text-customRed">
+                      <Delete />
+                    </span>
+                  ) : (
+                    "-"
+                  )}
+                </button>
+              </div>
             </div>
-            <div className="mr-10 flex flex-col text-customGray max-md:text-darkGray">
+            <div className="mr-4 flex flex-col text-customGray max-md:text-darkGray">
               <p className="font-bold text-2xl text-charcoal line-clamp-1 max-md:line-clamp-2 max-md:font-normal max-md:text-sm max-md:text-customGray max-md:w-36">
                 {item.title}
               </p>
-              <p className="mt-1 font-light max-md:font-bold">
+              <p className="mt-1 font-light max-md:font-bold max-md:text-xs">
                 {item.structure_title}
               </p>
-              <p className="mt-3 font-light max-md:font-bold">انتشارات مهرک</p>
-              <p className="text-customRed mt-4 text-sm font-medium invisible">
-                {(
-                  (item.old_main_price - item.price) *
-                  item.quantity
-                ).toLocaleString()}{" "}
-                تومان تخفیف
+              <p className="mt-3 font-light max-md:font-bold max-md:text-xs">
+                انتشارات مهرک
               </p>
-              <p className="text-lg font-medium">
+              <p className="text-customRed mt-2 text-sm font-medium max-md:font-bold max-md:text-[9px]">
+                {/* {(
+                  (item.main_price - item.price) *
+                  item.quantity
+                ).toLocaleString()}{" "} */}
+        {calculatePriceDrop(item.main_price , item.price)}تخفیف
+              </p>
+              <p className="text-lg font-medium mt-1 max-md:text-sm max-md:font-bold">
                 {(
                   item.price * (isLogin ? item.quantity : LocalBuy)
                 ).toLocaleString()}{" "}
@@ -205,7 +256,10 @@ const BoxBuyProduct: React.FC<BoxBuyProductProps> = ({
                   className="bg-lightGray w-fit rounded-md shadow-2xl text-sm font-light font-vazirmatn text-customGray absolute left-2 top-[-48px] mt-2"
                   style={{ minWidth: "150px", maxWidth: "300px" }}
                 >
-                  <DropdownMenuItem className="cursor-pointer p-2 rounded-md w-full whitespace-nowrap">
+                  <DropdownMenuItem
+                    disabled
+                    className="cursor-pointer p-2 rounded-md w-full whitespace-nowrap  disabled:"
+                  >
                     <ChangeToNextBuy />
                     انتقال به خرید بعدی
                   </DropdownMenuItem>
@@ -214,15 +268,15 @@ const BoxBuyProduct: React.FC<BoxBuyProductProps> = ({
                     onClick={handleDeleteClick}
                   >
                     <DeleteProduct />
-                    حدف از سید خرید
+                    حدف از سبد خرید
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
             <div className="flex items-center justify-center flex-col max-md:items-start w-full h-full z-50">
-              <div className="bg-white rounded-full py-3 text-customGray flex text-2xl">
+              <div className="bg-white max-md:hidden rounded-full py-3 text-customGray flex text-2xl">
                 <button
-                  className="mx-6 cursor-pointer disabled:text-gray-200 disabled:cursor-not-allowed"
+                  className="mx-6 cursor-pointer disabled:text-gray-200z disabled:cursor-not-allowed"
                   onClick={handleAddToCart}
                   disabled={disabled || item.in_stock_count <= item.quantity}
                 >
@@ -270,9 +324,9 @@ const BoxBuyProduct: React.FC<BoxBuyProductProps> = ({
           <p
             className="flex mt-2 items-center cursor-pointer"
             onClick={() => {
-              setShowDeleteConfirm(false); 
-              setTimer(7); 
-              if (intervalId) clearInterval(intervalId); 
+              setShowDeleteConfirm(false);
+              setTimer(7);
+              if (intervalId) clearInterval(intervalId);
             }}
           >
             <ReBack />
@@ -284,7 +338,7 @@ const BoxBuyProduct: React.FC<BoxBuyProductProps> = ({
           <div className="absolute bottom-0 right-0 w-full h-2 bg-gray-300 rounded-full overflow-hidden">
             <div
               className="h-full bg-blue-500 transition-all duration-100"
-              style={{ width: `${(timer / 7) * 100}%` }} 
+              style={{ width: `${(timer / 7) * 100}%` }}
             ></div>
           </div>
         </div>

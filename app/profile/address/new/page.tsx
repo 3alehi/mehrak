@@ -158,9 +158,9 @@ const Page: React.FC = () => {
       !errors.postalCode);
 
   return (
-    <div className="max-md:px-4 ">
+    <div className="max-md:px-0 ">
       <>
-        <div className="flex relative">
+        <div className="flex relative max-md:px-4">
           <div className="max-md:flex max-md:items-end">
             <i
               className="cursor-pointer max-md:mt-4 text-customGray"
@@ -281,7 +281,7 @@ const Page: React.FC = () => {
               <div className="mt-4">
                 <div className="grid px-2 grid-cols-2 justify-evenly border rounded-md py-2">
                   <p
-                    className={`cursor-pointer flex justify-center items-center text-center py-2 rounded-xl transition-all duration-300 ${
+                    className={`cursor-pointer max-md:h-[36px] flex justify-center items-center text-center py-2 rounded-xl transition-all duration-300 ${
                       gender === "1"
                        ? "bg-customBlue text-aquaBlue  border border-aquaBlue scale-105"
                         : "bg-white text-customGray scale-95"
@@ -291,7 +291,7 @@ const Page: React.FC = () => {
                     <span className="mr-2"> خودم </span>
                   </p>
                   <p
-                    className={`cursor-pointer flex justify-center items-center text-center py-2 rounded-xl transition-all duration-300 mx-2 ${
+                    className={`cursor-pointer max-md:h-[36px]  flex justify-center items-center text-center py-2 rounded-xl transition-all duration-300 mx-2 ${
                       gender === "2"
                         ? "bg-customBlue text-aquaBlue  border border-aquaBlue scale-105"
                         : "bg-white text-customGray scale-95"
@@ -337,7 +337,7 @@ const Page: React.FC = () => {
                 )}
               </div>
             )}
-            <div className="flex justify-end">
+            <div className="flex justify-end max-md:justify-start">
               <Button
                 className="bg-aquaBlue hover:bg-teal-500 mb-12 w-[70%] mt-6 rounded-md transition-all duration-300 transform hover:scale-105 active:scale-95"
                 disabled={!isFormValid || loading}

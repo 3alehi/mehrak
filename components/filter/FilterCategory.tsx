@@ -1,13 +1,21 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Sorting from '../icons/Sorting';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '../ui/dropdown-menu';
 import { Button } from '../ui/button';
 import FilterIcon from '../icons/FilterIcon';
+import { fetchProductsWithCache } from '@/utils/api/fetchProductsWithCache';
 
 
 
 const FilterCategory: React.FC = () => {
   const [selectedOption, setSelectedOption] = useState<string>('جدیدترین');
+  useEffect(() => {
+    const fetchData = async () => {
+      const result = await fetchProductsWithCache();
+      console.log(result);
+    };
+    fetchData();
+  }, []);
 
   const sortOptions: Record<string, string> = {
     'جدیدترین': 'id',

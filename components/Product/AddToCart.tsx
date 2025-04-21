@@ -26,12 +26,32 @@ export default function AddToCart({
   loadingRemove,
   LocalBuy,
 }: AddToCartProps) {
-  const mainImage = data.data.media_files.find(
-    (image: { main_link: string; collection_name?: string }) =>
-      image.collection_name === "book_front_image"
-  );
+  
+  // بررسی وجود media_files
+  if (!data.data.media_files || data.data.media_files.length === 0) {
+    return (
+      <div className="border border-lightGrayBlue rounded-md px-4 h-fit sticky top-[168px] w-[320px] max-md:hidden">
+        <p className="text-center text-customGray">تصویری موجود نیست</p>
+      </div>
+    );
+  }
 
-  const displayImage = mainImage || data.data.media_files[0];
+  // پیدا کردن تصویر اصلی:
+  // 1. ابتدا book_front_image
+  // 2. سپس normal_product_main_image
+  // 3. در نهایت اولین تصویر معتبر
+  const mainImage =
+    data.data.media_files.find(
+      (image: { main_link: string; collection_name?: string }) =>
+        image.collection_name === "book_front_image"
+    ) ||
+    data.data.media_files.find(
+      (image: { main_link: string; collection_name?: string }) =>
+        image.collection_name === "normal_product_main_image"
+    ) ||
+    data.data.media_files[0];
+
+  const displayImage = mainImage;
 
   return (
     <div className="border border-lightGrayBlue rounded-md px-4 h-fit sticky top-[168px] w-[320px] max-md:hidden">
@@ -41,6 +61,7 @@ export default function AddToCart({
             className="w-full h-full object-contain"
             src={displayImage.main_link}
             alt={data.data.title}
+            loading="lazy" // بهبود عملکرد بارگذاری
           />
         </div>
       </div>
@@ -60,7 +81,8 @@ export default function AddToCart({
       </div>
       <div className="flex justify-between mt-5 text-customGray font-medium text-xl">
         <p className="text-customRed">
-          { data.data.main_price != data.data.price  && calculatePriceDrop(data.data.main_price, data.data.price)}
+          {data.data.main_price !== data.data.price &&
+            calculatePriceDrop(data.data.main_price, data.data.price)}
         </p>
         <p>{data.data.price_formatted}</p>
       </div>
@@ -68,7 +90,7 @@ export default function AddToCart({
       <div className="mb-4">
         {data.data.in_stock_count !== 0 ? (
           <>
-            {quantity == 0 && !LocalBuy ? (
+            {quantity === 0 && !LocalBuy ? (
               <Button
                 disabled={loadingProduct}
                 className="w-full mt-2 disabled:cursor-pointer py-4 text-white bg-customRed flex font-bold text-xl mb-4 h-[63px] rounded-full"
@@ -79,65 +101,58 @@ export default function AddToCart({
                     <div className="w-5 h-5 border-4 border-t-transparent border-dotted border-white rounded-full animate-spin mx-auto"></div>
                   )}
                 </div>
-                <Card/>
+                <Card />
                 <span className="mr-2">افزودن به سبد خرید</span>
               </Button>
             ) : (
-              <>
-                <div className="w-full flex items-center mt-5 rounded-full border border-lightGrayBlue py-3 px-4 justify-around">
-                  <div className="flex items-center gap-4">
-                    <button
-                      disabled={loadingProduct || loadingRemove}
-                      className="text-xl font-bold text-customGrayd disabled:cursor-not-allowed cursor-pointer min-w-[20px] flex justify-center items-center"
-                      onClick={() => {
-                        handleAddToCart();
-                      }}
-                    >
-                      {loadingProduct ? (
-                        <div className="w-4 h-4 border-2 border-t-transparent border-customGray rounded-full animate-spin cursor-not-allowed "></div>
-                      ) : (
-                        "+"
-                      )}
-                    </button>
-                    <span className="text-2xl font-light text-customGray">
-                      {getTokenFromCookie() ? quantity : LocalBuy}
-                    </span>
-                    <button
-                      disabled={loadingProduct || loadingRemove}
-                      className="text-customGray disabled:cursor-not-allowed cursor-pointer min-w-[20px] flex justify-center items-center"
-                      onClick={handleRomeveProduct}
-                    >
-                      {loadingRemove ? (
-                        <div className="w-4 h-4 border-2 cursor-not-allowed border-t-transparent border-customGray rounded-full animate-spin"></div>
-                      ) : quantity == 1 || LocalBuy == 1 ? (
-                        <span className="text-customRed">
-                          {" "}
-                          <Delete />
-                        </span>
-                      ) : (
-                        "-"
-                      )}
-                    </button>
-                  </div>
-                  <div className="flex flex-col text-sm text-customGray font-light items-end">
-                    <p className="text-sm">در سبد شما قرار گرفت</p>
-                    <Link
-                      href={"/cart#BUYCART"}
-                      className="text-aquaBlue text-xs"
-                    >
-                      مشاهده سبد خرید
-                    </Link>
-                  </div>
+              <div className="w-full flex items-center mt-5 rounded-full border border-lightGrayBlue py-3 px-4 justify-around">
+                <div className="flex items-center gap-4">
+                  <button
+                    disabled={loadingProduct || loadingRemove}
+                    className="text-xl font-bold text-customGray disabled:cursor-not-allowed cursor-pointer min-w-[20px] flex justify-center items-center"
+                    onClick={handleAddToCart}
+                  >
+                    {loadingProduct ? (
+                      <div className="w-4 h-4 border-2 border-t-transparent border-customGray rounded-full animate-spin cursor-not-allowed"></div>
+                    ) : (
+                      "+"
+                    )}
+                  </button>
+                  <span className="text-2xl font-light text-customGray">
+                    {getTokenFromCookie() ? quantity : LocalBuy}
+                  </span>
+                  <button
+                    disabled={loadingProduct || loadingRemove}
+                    className="text-customGray disabled:cursor-not-allowed cursor-pointer min-w-[20px] flex justify-center items-center"
+                    onClick={handleRomeveProduct}
+                  >
+                    {loadingRemove ? (
+                      <div className="w-4 h-4 border-2 cursor-not-allowed border-t-transparent border-customGray rounded-full animate-spin"></div>
+                    ) : quantity === 1 || LocalBuy === 1 ? (
+                      <span className="text-customRed">
+                        <Delete />
+                      </span>
+                    ) : (
+                      "-"
+                    )}
+                  </button>
                 </div>
-              </>
+                <div className="flex flex-col text-sm text-customGray font-light items-end">
+                  <p className="text-sm">در سبد شما قرار گرفت</p>
+                  <Link href={"/cart#BUYCART"} className="text-aquaBlue text-xs">
+                    مشاهده سبد خرید
+                  </Link>
+                </div>
+              </div>
             )}
           </>
         ) : (
           <p className="w-full flex justify-center text-customGray font-medium text-xl mt-4">
-            محصول موجود نمیباشد
+            محصول موجود نمی‌باشد
           </p>
         )}
       </div>
+
     </div>
   );
 }
